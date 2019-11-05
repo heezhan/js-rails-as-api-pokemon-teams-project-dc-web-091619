@@ -48,24 +48,28 @@ function getAllTrainers(){
 }
 
 function addPokemon(e){
+    if (e.target.nextElementSibling.childElementCount < 6) {
 
-    let trainer_id = e.target.parentElement.attributes[0].value;
+        let trainer_id = e.target.parentElement.attributes[0].value;
 
-    fetch(POKEMONS_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            trainer_id: trainer_id
-        })
-    }).then(response => response.json())
-        .then(newPokemon => showPokemon(e,newPokemon))
+        fetch(POKEMONS_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                trainer_id: trainer_id
+            })
+        }).then(response => response.json())
+            .then(newPokemon => showPokemon(e,newPokemon))
+        } else {
+            getAllTrainers()
+        }
 
 }
 
 function showPokemon(e, pokemon){
-
+    
     let ul = e.target.nextElementSibling;
     // let selected = e.target.attributes[0].value;
 
@@ -78,18 +82,17 @@ function showPokemon(e, pokemon){
     releaseButton.setAttribute("data-pokemon-id", pokemon.id)
     li.appendChild(releaseButton);
     releaseButton.addEventListener("click", deletePokemon)
+
 }
 
 function deletePokemon(e) {
+    
     let pokemon_id = e.target.attributes[1].value 
     let parent = e.target.parentElement
-
+    
     fetch(`${POKEMONS_URL}/${pokemon_id}`, {
         method: "DELETE"
     }).then(resp => randomFunction(parent))
-
-
-
 }
 
 function randomFunction(parent) {
